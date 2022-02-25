@@ -1,0 +1,76 @@
+type ProductSize {
+  height: Int
+  width: Int
+  length: Int
+  price: Float
+}
+
+input ProductSizeInput {
+  height: Int
+  width: Int
+  length: Int
+   price: Float
+}
+input doorSizeInput {
+   height: Int
+  width: Int
+   length: Int
+   price: Float
+}
+
+
+# type Dimension {
+#   unit: String
+#   value: String
+# }
+
+# input DimensionInput {
+#   unit: String
+#   value: String
+# }
+
+extend type Product {
+  door: [Product]
+  unit: [Product]
+  drawer: [Product]
+  accessories: Product
+  productType: String
+  availableSizes: [ProductSize]
+  compatibleSizes: [ProductSize]
+  unitType:String
+  
+}
+
+extend type ProductVariant {
+  size: ProductSize
+  productType: String
+    availableSizes: [ProductSize]
+  compatibleSizes: [ProductSize]
+   unitType:String
+}
+
+extend input ProductInput {
+    availableSizes: [ProductSizeInput]
+  compatibleSizes: [ProductSizeInput]
+  unitType:String
+  
+}
+extend input ProductVariantInput  {
+    availableSizes: [ProductSizeInput]
+  compatibleSizes: [ProductSizeInput]
+   unitType:String
+  
+}
+extend type CatalogProductVariant {
+    door: [Product]
+  unit: [Product]
+  drawer: [Product]
+  accessories: Product
+  productType: String
+  availableSizes: [ProductSize]
+  compatibleSizes: [ProductSize]
+   unitType:String
+}
+extend type Query{
+  getDoorsByUnitID(slug:String,unitType:String):[CatalogProduct]
+}
