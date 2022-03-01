@@ -11,11 +11,13 @@ export default function myStartup(context) {
   //     type: String,
   //   },
   // });
-
-  const ProductSize = new SimpleSchema({
+  const sizeSchema = new SimpleSchema({
     height: Number,
     length: Number,
     width: Number,
+  })
+  const ProductSize = new SimpleSchema({
+    size:sizeSchema,
     price: Number
   });
   

@@ -9,6 +9,11 @@ import myStartup from "./startup.js";
 
  const mySchema = importAsString("./schemas/schema.graphql");
  const resolvers = {
+  // CatalogProductVariant:{
+  //   compatibleSizes(parent, args, context, info){
+  //     console.log(parent.compatibleSizes)
+  //   }
+  // },
   Query:{
     getDoorsByUnitID(parent, args, context, info){
       console.log("haha new query", args.doorSize);
@@ -17,10 +22,21 @@ import myStartup from "./startup.js";
       console.log("args.slug",args.slug);
       const getDoors =async () => {
         let door = await Catalog.findOne({'product.slug':args.slug});
-       
-        console.log("DOOR",door)
-        let result = await Catalog.find({'product.variants.compatibleSizes':{$all:door.product.variants[0].availableSizes}}).toArray();
-        result = result.map(products=>products.product);
+        door = door.product.variants[0].availableSizes.map(item=>{
+          console.log("item", item)
+          return {
+                ...item.size
+          };
+      })
+        console.log("DOOR",door,"available sizes",door)
+        let result = await Catalog.aggregate([{"$match":{"product.variants.compatibleSizes":{"$exists":true}}},
+        {"$unwind":"$product.variants"},
+        {"$unwind":"$product.variants.compatibleSizes"},
+        {"$match":{"product.variants.compatibleSizes.size":{"$in":door}
+        }},{$group:{"_id":"$_id",product:{"$first":"$$ROOT.product"},compatibleSizes:{$push:"$product.variants.compatibleSizes"}}}
+        ]).toArray();
+        //find({'product.variants.0.compatibleSizes':{$all:door.product.variants[0].availableSizes}}).toArray();
+         result = result.map(products=>products.product);
         console.log("result",result);
        return result;
       }

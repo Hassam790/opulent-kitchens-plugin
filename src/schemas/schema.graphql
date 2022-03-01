@@ -1,20 +1,24 @@
-type ProductSize {
-  height: Int
+input sizeInputInput{
+ height: Int
   width: Int
-  length: Int
+   length: Int
+}
+type sizeInputType{
+ height: Int
+  width: Int
+   length: Int
+}
+type ProductSize {
+  size:sizeInputType
   price: Float
 }
 
 input ProductSizeInput {
-  height: Int
-  width: Int
-  length: Int
+   size:sizeInputInput
    price: Float
 }
 input doorSizeInput {
-   height: Int
-  width: Int
-   length: Int
+   size:sizeInputInput
    price: Float
 }
 
@@ -71,6 +75,7 @@ extend type CatalogProductVariant {
   compatibleSizes: [ProductSize]
    unitType:String
 }
+
 extend type Query{
   getDoorsByUnitID(slug:String,unitType:String):[CatalogProduct]
 }
